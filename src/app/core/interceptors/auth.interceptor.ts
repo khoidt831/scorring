@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
-  HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
@@ -16,6 +20,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
+   
+    const isAuthApi =
+      req.url.includes('/authentication/token') ||
+      req.url.includes('/refresh');
+
+    if (isAuthApi) {
+      return next.handle(req);
+    }
+
+
     const token = this.authService.getToken();
 
     let authReq = req;
@@ -27,9 +41,11 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
 
+
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
 
+        // Nếu 401 → xử lý refresh token
         if (error.status === 401) {
           return this.handle401Error(authReq, next);
         }
@@ -49,10 +65,18 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap((res: any) => {
           this.isRefreshing = false;
 
-          const newToken = res.accessToken;
+          const newToken = res.data?.accessToken;
+
+
+          if (!newToken) {
+            this.authService.logout();
+            return throwError(() => new Error('No token from refresh'));
+          }
+
           this.authService.saveToken(newToken);
           this.refreshTokenSubject.next(newToken);
-            
+
+  
           return next.handle(
             req.clone({
               setHeaders: { Authorization: `Bearer ${newToken}` }

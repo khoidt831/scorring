@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 export interface AuthResponse {
   token: string;
@@ -14,7 +15,9 @@ export interface AuthResponse {
 })
 export class AuthService {
 
-  private baseUrl = 'http://localhost:8080/api/auth';
+  //private baseUrl = `${environment.apiUrl}/authentication/token`;
+
+  private baseUrl = environment.apiUrl;
 
   private TOKEN_KEY = 'token';
   private REFRESH_TOKEN_KEY = 'refreshToken';
@@ -22,24 +25,27 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient
-  ) {}
+  ) { }
 
-  loginApi(username: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, {
-      username,
-      password
-    }).pipe(
-      tap(res => this.setSession(res.token, res.refreshToken))
-    );
-  }
+  loginApi(username: string, password: string): Observable<any> {
+  return this.http.post<any>(`${this.baseUrl}/authentication/token`, {
+    username,
+    password
+  }).pipe(
+    tap(res => {
+      const token = res.data?.accessToken;
+      if (token) {
+        this.setSession(token);
+      } else {
+        throw new Error('No accessToken in response');
+      }
+    })
+  );
+}
 
-  private setSession(token: string, refreshToken?: string) {
-    localStorage.setItem(this.TOKEN_KEY, token);
-
-    if (refreshToken) {
-      localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
-    }
-  }
+private setSession(token: string) {
+  localStorage.setItem(this.TOKEN_KEY, token);
+}
 
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
@@ -75,7 +81,7 @@ export class AuthService {
     }
   }
 
-  refreshToken(): Observable<AuthResponse> {
+  refreshToken(): Observable<any> {
     const refreshToken = this.getRefreshToken();
 
     if (!refreshToken) {
@@ -83,11 +89,12 @@ export class AuthService {
       return throwError(() => new Error('No refresh token'));
     }
 
-    return this.http.post<AuthResponse>(`${this.baseUrl}/refresh`, {
+    return this.http.post<any>(`${this.baseUrl}/refresh`, {
       refreshToken
     }).pipe(
       tap(res => {
-        this.setSession(res.token, res.refreshToken);
+        const token = res.data?.accessToken;
+        this.setSession(token);
       })
     );
   }
