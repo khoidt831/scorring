@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/dashboard']); 
     }
   }
-
+  
   login() {
     if (!this.username || !this.password) {
       alert('Nhập đầy đủ thông tin');
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
-    
+
     this.authService.loginApi(this.username, this.password)
       .subscribe({
         next: () => {

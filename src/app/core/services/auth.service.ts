@@ -15,7 +15,7 @@ export interface AuthResponse {
 })
 export class AuthService {
 
-  
+
   private baseUrl = environment.apiUrl;
 
   private TOKEN_KEY = 'token';
@@ -27,29 +27,32 @@ export class AuthService {
   ) { }
 
   loginApi(username: string, password: string): Observable<any> {
-  return this.http.post<any>(`${this.baseUrl}/authentication/token`, {
-    username,
-    password
-  }).pipe(
-    tap(res => {
-      const token = res.data?.accessToken;
-      if (token) {
-        this.setSession(token);
-      } else {
-        throw new Error('No accessToken in response');
-      }
-    })
-  );
-}
+    return this.http.post<any>(`${this.baseUrl}/authentication/token`, {
+      username,
+      password
+    }).pipe(
+      tap(res => {
+        const token = res.data?.accessToken;
+        if (token) {
+          this.setSession(token);
+        } else {
+          throw new Error('No accessToken in response');
+        }
+      })
+    );
+  }
 
-private setSession(token: string) {
-  localStorage.setItem(this.TOKEN_KEY, token);
-}
+  private setSession(token: string) {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
 
   logout() {
+
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    this.router.navigate(['/auth/login']);
+    localStorage.removeItem('user');
+
+    this.router.navigate(['/auth/login'], { replaceUrl: true });
   }
 
   getToken(): string | null {
@@ -110,7 +113,7 @@ private setSession(token: string) {
       return null;
     }
   }
-
+  
   getRoles(): string[] {
     return this.getUser()?.roles || [];
   }

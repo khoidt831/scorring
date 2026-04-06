@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
+    
     const isAuthApi =
       req.url.includes('/authentication/token') ||
       req.url.includes('/refresh');
