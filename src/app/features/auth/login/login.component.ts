@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -6,21 +7,43 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  constructor(private authService: AuthService) { }
+export class LoginComponent implements OnInit {
 
-  ngOnInit() {
+  username: string = '';
+  password: string = '';
+
+  loading = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      window.location.href = '/dashboard';
+      this.router.navigate(['/dashboard']); 
     }
   }
 
   login() {
-    // giả lập gọi API
-    const fakeToken = 'abc123.jwt.token';
+    if (!this.username || !this.password) {
+      alert('Nhập đầy đủ thông tin');
+      return;
+    }
 
-    this.authService.login(fakeToken);
+    this.loading = true;
+
+    this.authService.loginApi(this.username, this.password)
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/dashboard']); 
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error('Login failed', err);
+          alert('Sai tài khoản hoặc mật khẩu');
+        }
+      });
   }
-  
-
 }

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutComponent } from './layout/layout.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { RoleGuard } from './core/guards/role.guard';
+import { LayoutComponent } from './layout/layout.component';
 
 const routes: Routes = [
   {
@@ -13,8 +14,14 @@ const routes: Routes = [
 
   {
     path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
+
+  {
+    path: '',
     component: LayoutComponent,
-    canActivate: [AuthGuard],  // chặn
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'dashboard',
@@ -22,18 +29,30 @@ const routes: Routes = [
           import('./features/dashboard/dashboard.module')
             .then(m => m.DashboardModule)
       },
+
+      // USER
       {
         path: 'user',
+        canActivate: [() => RoleGuard(['USER', 'ADMIN'])],
         loadChildren: () =>
           import('./features/user/user.module')
             .then(m => m.UserModule)
+      },
+
+      // ADMIN
+      {
+        path: 'admin',
+        canActivate: [() => RoleGuard(['ADMIN'])],
+        loadChildren: () =>
+          import('./features/admin/admin.module')
+            .then(m => m.AdminModule)
       }
     ]
   },
 
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'dashboard'
   }
 ];
 
