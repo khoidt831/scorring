@@ -3,22 +3,42 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
 const routes: Routes = [
+  // ❌ KHÔNG layout
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./features/auth/auth.module')
+        .then(m => m.AuthModule)
+  },
+
+  // ✅ Có layout
   {
     path: '',
-    component: LayoutComponent, 
+    component: LayoutComponent,
     children: [
       {
         path: '',
-        redirectTo: 'auth/login',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
       },
       {
-        path: 'auth',
+        path: 'dashboard',
         loadChildren: () =>
-          import('./features/auth/auth.module')
-            .then(m => m.AuthModule)
+          import('./features/dashboard/dashboard.module')
+            .then(m => m.DashboardModule)
+      },
+      {
+        path: 'user',
+        loadChildren: () =>
+          import('./features/user/user.module')
+            .then(m => m.UserModule)
       }
     ]
+  },
+
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
 
