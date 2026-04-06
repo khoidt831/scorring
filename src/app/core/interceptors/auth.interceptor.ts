@@ -20,7 +20,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-   
     const isAuthApi =
       req.url.includes('/authentication/token') ||
       req.url.includes('/refresh');
@@ -29,8 +28,11 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-
     const token = this.authService.getToken();
+
+    if (token && this.authService.shouldRefreshToken() && !this.isRefreshing) {
+      return this.handle401Error(req, next);
+    }
 
     let authReq = req;
     if (token) {
@@ -41,11 +43,9 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
 
-
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
 
-        // Nếu 401 → xử lý refresh token
         if (error.status === 401) {
           return this.handle401Error(authReq, next);
         }
@@ -67,7 +67,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
           const newToken = res.data?.accessToken;
 
-
           if (!newToken) {
             this.authService.logout();
             return throwError(() => new Error('No token from refresh'));
@@ -76,10 +75,11 @@ export class AuthInterceptor implements HttpInterceptor {
           this.authService.saveToken(newToken);
           this.refreshTokenSubject.next(newToken);
 
-  
           return next.handle(
             req.clone({
-              setHeaders: { Authorization: `Bearer ${newToken}` }
+              setHeaders: {
+                Authorization: `Bearer ${newToken}`
+              }
             })
           );
         }),
@@ -97,7 +97,9 @@ export class AuthInterceptor implements HttpInterceptor {
       switchMap(token =>
         next.handle(
           req.clone({
-            setHeaders: { Authorization: `Bearer ${token}` }
+            setHeaders: {
+              Authorization: `Bearer ${token}`
+            }
           })
         )
       )

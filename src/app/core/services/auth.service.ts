@@ -15,8 +15,7 @@ export interface AuthResponse {
 })
 export class AuthService {
 
-  //private baseUrl = `${environment.apiUrl}/authentication/token`;
-
+  
   private baseUrl = environment.apiUrl;
 
   private TOKEN_KEY = 'token';
