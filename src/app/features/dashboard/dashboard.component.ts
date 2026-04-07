@@ -8,14 +8,21 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class DashboardComponent implements OnInit {
 
-  user: any;
-  
-  constructor(private authService: AuthService) {}
+  user: any = null;
+
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.user = this.authService.getUser();
+    this.loadUser();
   }
 
+  loadUser() {
+    this.user = this.authService.getUser();
+    if (!this.user) {
+      this.authService.logout();
+    }
+  }
+  
   logout() {
     this.authService.logout();
   }

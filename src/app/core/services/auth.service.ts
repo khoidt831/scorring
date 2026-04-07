@@ -101,19 +101,24 @@ export class AuthService {
     );
   }
 
-  getUser(): any {
-    const token = this.getToken();
-    if (!token) return null;
+  // getUser(): any {
+  //   const token = this.getToken();
+  //   if (!token) return null;
 
-    try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload));
-    } catch {
-      this.logout();
-      return null;
-    }
+  //   try {
+  //     const payload = token.split('.')[1];
+  //     return JSON.parse(atob(payload));
+  //   } catch {
+  //     this.logout();
+  //     return null;
+  //   }
+  // }
+
+  getUser(): any {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
-  
+
   getRoles(): string[] {
     return this.getUser()?.roles || [];
   }
@@ -128,4 +133,12 @@ export class AuthService {
 
     return this.isTokenExpired(token, 30);
   }
+
+  getProfile(username: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/login`, {
+      username,
+      password
+    });
+  }
+
 }
