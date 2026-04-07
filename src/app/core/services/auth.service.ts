@@ -45,7 +45,7 @@ export class AuthService {
   private setSession(token: string) {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
-
+  
   logout() {
 
     localStorage.removeItem(this.TOKEN_KEY);
@@ -100,19 +100,6 @@ export class AuthService {
       })
     );
   }
-
-  // getUser(): any {
-  //   const token = this.getToken();
-  //   if (!token) return null;
-
-  //   try {
-  //     const payload = token.split('.')[1];
-  //     return JSON.parse(atob(payload));
-  //   } catch {
-  //     this.logout();
-  //     return null;
-  //   }
-  // }
 
   getUser(): any {
     const user = localStorage.getItem('user');

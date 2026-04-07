@@ -1,1 +1,45 @@
-<p>sidebar works!</p>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<div class="sidebar">
+
+  <!-- LOGO -->
+  <div class="sidebar-header">
+    <div class="logo">Finy Admin</div>
+  </div>
+
+  <!-- USER INFO -->
+  <div class="user-info">
+    <div class="avatar">
+  <mat-icon>person</mat-icon>
+</div>
+    <div class="info">
+      <div class="name">{{user.fullName}}</div>
+      <div class="role">{{user.role}}</div>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <ul class="menu">
+
+    <li routerLink="/dashboard" routerLinkActive="active">
+     <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </li>
+
+    <li routerLink="/user" routerLinkActive="active">
+      <mat-icon>user</mat-icon>
+      <span>User Management</span>
+    </li>
+
+    <li routerLink="/branch" routerLinkActive="active">
+      <mat-icon>branch</mat-icon>
+      <span>Branch Management</span>
+    </li>
+
+     <li routerLink="/area" routerLinkActive="active">
+      <mat-icon>area</mat-icon>
+      <span>Area Management</span>
+    </li>
+
+  </ul>
+
+</div>

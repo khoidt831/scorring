@@ -40,14 +40,11 @@ export class LoginComponent implements OnInit {
     ).subscribe({
       next: (res) => {
         this.loading = false;
-
         const user = res.data?.User;
-
         if (!user) {
           alert('Không lấy được thông tin user');
           return;
         }
-
         // lưu user
         localStorage.setItem('user', JSON.stringify(user));
         this.router.navigate(['/dashboard']);
