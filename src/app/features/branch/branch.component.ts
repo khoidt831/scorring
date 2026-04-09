@@ -29,7 +29,7 @@ export class BranchComponent implements OnInit {
   constructor(private service: BranchService, private districtService: DistrictService) { }
 
   ngOnInit() {
-    this.load();
+    this.search();
     this.loadDistrict();
   }
 
@@ -69,35 +69,62 @@ export class BranchComponent implements OnInit {
     }
   }
 
-  delete(id: number) {
-    if (confirm('Xóa?')) {
-      this.service.delete(id).subscribe(() => {
-        this.fullList = this.fullList.filter(x => x.id !== id);
-        this.total = this.fullList.length;
+  // delete(id: number) {
+  //   if (confirm('Xóa?')) {
+  //     this.service.delete(id).subscribe(() => {
+  //       this.fullList = this.fullList.filter(x => x.id !== id);
+  //       this.total = this.fullList.length;
 
-        if (this.page * this.size >= this.total) {
-          this.page = Math.max(this.page - 1, 0);
-        }
+  //       if (this.page * this.size >= this.total) {
+  //         this.page = Math.max(this.page - 1, 0);
+  //       }
 
-        this.paginate();
-      });
-    }
-  }
+  //       this.paginate();
+  //     });
+  //   }
+  // }
 
   get totalPages() {
-    return Math.ceil(this.total / this.size);
+    return Math.ceil(this.total / this.size) || 1;
   }
 
   search() {
-    const payload = {
-      ...this.searchForm,
-      page: this.page,
-      size: this.size
-    };
+    this.service.getList(this.searchForm).subscribe((res: any) => {
+      let data: any[] = res.data || [];
 
-    this.service.getList(payload).subscribe((res: any) => {
-      this.list = res.data || [];
-      this.total = res.total || 0;
+      data = data.filter(item => {
+
+        const bid = this.searchForm.bid?.trim()?.toUpperCase();
+        const aid = this.searchForm.aid?.trim()?.toUpperCase();
+        const name = this.searchForm.name?.trim()?.toUpperCase();
+        const status = this.searchForm.status;
+        
+        let ok = true;
+
+        if (bid) {
+          ok = ok && item.bid?.toUpperCase().includes(bid);
+        }
+
+        if (aid) {
+          ok = ok && item.aid?.toUpperCase().includes(aid);
+        }
+
+        if (name) {
+          ok = ok && item.name?.toUpperCase().includes(name);
+        }
+
+        if (status !== '' && status !== null && status !== undefined) {
+          ok = ok && item.status == status;
+        }
+
+        return ok;
+      });
+
+      this.fullList = data;
+      this.total = data.length;
+
+      this.page = 0;
+      this.paginate();
     });
   }
 
@@ -108,7 +135,8 @@ export class BranchComponent implements OnInit {
       name: '',
       status: ''
     };
-    this.page = 1;
+
+    this.page = 0;
     this.search();
   }
 }
