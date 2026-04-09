@@ -45,13 +45,11 @@ export class AuthService {
   private setSession(token: string) {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
-  
-  logout() {
 
+  logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem('user');
-
     this.router.navigate(['/auth/login'], { replaceUrl: true });
   }
 
@@ -107,9 +105,11 @@ export class AuthService {
   }
 
   getRoles(): string[] {
-    return this.getUser()?.roles || [];
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user.role) return [];
+    return [user.role];
   }
-
+  
   hasRole(role: string): boolean {
     return this.getRoles().includes(role);
   }

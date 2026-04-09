@@ -1,0 +1,105 @@
+.title {
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.table thead {
+  background: #4f46e5;
+  color: white;
+}
+
+.table th, .table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: 0.2s;
+}
+
+.table tbody tr:hover {
+  background: #f5f7ff;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.action {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 13px;
+}
+
+.add-btn {
+  background: #22c55e;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.add-btn:hover {
+  background: #16a34a;
+}
+
+.edit {
+  background: #3b82f6;
+  color: white;
+}
+
+.edit:hover {
+  background: #2563eb;
+}
+
+.delete {
+  background: #ef4444;
+  color: white;
+}
+
+.delete:hover {
+  background: #dc2626;
+}
+
+.pagination {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: none;
+  background: #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background: #d1d5db;
+}
+
+.ellipsis {
+  max-width: 250px;     
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

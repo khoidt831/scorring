@@ -1,0 +1,35 @@
+<h2 class="title">Branch Management</h2>
+
+<button class="btn add-btn" routerLink="/branch/create">+ Add</button>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th style="width: 150px;">Name</th>
+      <th style="width: 150px;">Area Name</th>
+      <th style="width: 150px;">Region Name</th>
+      <th>Detail Address</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let b of list">
+      <td>{{ b.bid }}</td>
+      <td style="width: 150px;">{{ b.name }}</td>
+      <td style="width: 150px;">{{ b.area_name}}</td>
+      <td style="width: 150px;">{{ b.region_name}}</td>
+      <td class="ellipsis">{{ b.detail_address }}</td>
+      <td class="action">
+        <button class="btn edit" [routerLink]="['/branch/edit', b.id]">Edit</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="pagination">
+  <button (click)="prev()">Prev</button>
+  <span>{{ page + 1 }} / {{ totalPages }}</span>
+  <button (click)="next()">Next</button>
+</div>

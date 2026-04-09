@@ -33,7 +33,8 @@ const routes: Routes = [
       // USER
       {
         path: 'user',
-        canActivate: [() => RoleGuard(['USER', 'ADMIN'])],
+        canActivate: [RoleGuard],
+        data: { roles: ['USER', 'ADMIN'] },
         loadChildren: () =>
           import('./features/user/user.module')
             .then(m => m.UserModule)
@@ -46,9 +47,32 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/admin/admin.module')
             .then(m => m.AdminModule)
+      },
+
+      // BRANCH
+      {
+        path: 'branch',
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] },
+        loadChildren: () =>
+          import('./features/branch/branch.module')
+            .then(m => m.BranchModule)
+      },
+
+      // AUTH
+      {
+        path: 'area',
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN'] },
+        loadChildren: () =>
+          import('./features/area/area.module')
+            .then(m => m.AreaModule)
       }
+      
     ]
   },
+  { path: 'branch', loadChildren: () => import('./features/branch/branch.module').then(m => m.BranchModule) },
+  { path: 'area', loadChildren: () => import('./features/area/area.module').then(m => m.AreaModule) },
 
   {
     path: '**',
@@ -60,4 +84,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

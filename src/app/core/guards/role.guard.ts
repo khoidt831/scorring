@@ -1,20 +1,30 @@
 import { inject } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const RoleGuard = (roles: string[]): boolean | UrlTree => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+export const RoleGuard = (allowedRoles: string[]): CanActivateFn => {
+  return () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
 
-  if (!authService.isLoggedIn()) {
-    return router.createUrlTree(['/auth/login']);
-  }
+    const userRoles = authService.getRoles();
 
-  const userRoles = authService.getRoles() || [];
+    if (!Array.isArray(userRoles)) {
+      console.error('Roles is not array:', userRoles);
+      router.navigate(['/dashboard']);
+      return false;
+    }
+    
+    const hasRole = allowedRoles.some(role =>
+      userRoles.includes(role)
+    );
 
-  const hasRole = roles.some(role => userRoles.includes(role));
+    if (!hasRole) {
+      alert('Không có quyền truy cập');
+      router.navigate(['/dashboard']);
+      return false;
+    }
 
-  return hasRole
-    ? true
-    : router.createUrlTree(['/dashboard']);
+    return true;
+  };
 };
