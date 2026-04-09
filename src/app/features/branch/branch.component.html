@@ -4,28 +4,23 @@
 
 <div class="search-box">
 
-  <input 
-    type="text" 
-    placeholder="Branch ID (bid)" 
-    [(ngModel)]="searchForm.bid"
-  />
+  <input type="text" placeholder="Branch ID (BID)" [(ngModel)]="searchForm.bid" />
 
-  <input class="aid" 
-    type="text" 
-    placeholder="Area ID (aid)" 
-    [(ngModel)]="searchForm.aid"
-  />
+  <!-- <input class="aid" type="text" placeholder="Area ID (aid)" [(ngModel)]="searchForm.aid" /> -->
 
-  <input class="branch-name" 
-    type="text" 
-    placeholder="Branch Name" 
-    [(ngModel)]="searchForm.name"
-  />
+  <select [(ngModel)]="searchForm.aid" class="area">
+    <option value="">-- Chọn Area --</option>
+    <option *ngFor="let item of areas" [value]="item.aid">
+      {{ item.name }}
+    </option>
+  </select>
+
+  <input class="branch-name" type="text" placeholder="Branch Name" [(ngModel)]="searchForm.name" />
 
   <select class="status" [(ngModel)]="searchForm.status">
-    <option value="">-- Status --</option>
-    <option value="1">Active</option>
-    <option value="0">Inactive</option>
+    <option [ngValue]="null">-- Trạng thái --</option>
+    <option [ngValue]="1">Hoạt động</option>
+    <option [ngValue]="0">Ngừng hoạt động</option>
   </select>
 
   <button class="btn-search" (click)="search()">Search</button>

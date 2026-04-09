@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AreaService } from 'src/app/core/services/area.service';
 import { BranchService } from 'src/app/core/services/branch.service';
 import { DistrictService } from 'src/app/core/services/district.service';
 
@@ -11,6 +12,8 @@ export class BranchComponent implements OnInit {
 
   fullList: any[] = [];
   list: any[] = [];
+
+  areas: any[] = [];
 
   searchForm: any = {
     bid: '',
@@ -26,25 +29,16 @@ export class BranchComponent implements OnInit {
   size = 10;
   total = 0;
 
-  constructor(private service: BranchService, private districtService: DistrictService) { }
+  constructor(private service: BranchService, private areaService: AreaService) { }
 
   ngOnInit() {
     this.search();
-    this.loadDistrict();
+    this.loadAreas();
   }
 
-  loadDistrict() {
-    this.districtService.getDistrict().subscribe((res: any) => {
-      this.districts = res.data || [];
-    });
-  }
-
-  load() {
-    this.service.getList().subscribe((res: any) => {
-      this.fullList = res.data || [];
-      this.total = this.fullList.length;
-
-      this.paginate();
+  loadAreas() {
+    this.areaService.getAll().subscribe((res: any) => {
+      this.areas = res.data || res || [];
     });
   }
 
@@ -69,21 +63,6 @@ export class BranchComponent implements OnInit {
     }
   }
 
-  // delete(id: number) {
-  //   if (confirm('Xóa?')) {
-  //     this.service.delete(id).subscribe(() => {
-  //       this.fullList = this.fullList.filter(x => x.id !== id);
-  //       this.total = this.fullList.length;
-
-  //       if (this.page * this.size >= this.total) {
-  //         this.page = Math.max(this.page - 1, 0);
-  //       }
-
-  //       this.paginate();
-  //     });
-  //   }
-  // }
-
   get totalPages() {
     return Math.ceil(this.total / this.size) || 1;
   }
@@ -98,7 +77,7 @@ export class BranchComponent implements OnInit {
         const aid = this.searchForm.aid?.trim()?.toUpperCase();
         const name = this.searchForm.name?.trim()?.toUpperCase();
         const status = this.searchForm.status;
-        
+
         let ok = true;
 
         if (bid) {

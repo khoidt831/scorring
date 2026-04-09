@@ -4,10 +4,14 @@ import { BaseApiService } from 'src/app/core/services/base-api.service';
 @Injectable({ providedIn: 'root' })
 export class AreaService {
 
-  constructor(private api: BaseApiService) {}
+  constructor(private api: BaseApiService) { }
 
   getList(params: any) {
-    return this.api.get(`area?page=${params.page}&size=${params.size}`);
+    return this.api.post('api/admin/search-area', {});
+  }
+
+  getAll() {
+    return this.api.post('api/admin/search-area', {});
   }
 
   create(data: any) {
