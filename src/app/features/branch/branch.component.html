@@ -2,10 +2,42 @@
 
 <button class="btn add-btn" routerLink="/branch/create">+ Add</button>
 
+<div class="search-box">
+
+  <input 
+    type="text" 
+    placeholder="Branch ID (bid)" 
+    [(ngModel)]="searchForm.bid"
+  />
+
+  <input class="aid" 
+    type="text" 
+    placeholder="Area ID (aid)" 
+    [(ngModel)]="searchForm.aid"
+  />
+
+  <input class="branch-name" 
+    type="text" 
+    placeholder="Branch Name" 
+    [(ngModel)]="searchForm.name"
+  />
+
+  <select class="status" [(ngModel)]="searchForm.status">
+    <option value="">-- Status --</option>
+    <option value="1">Active</option>
+    <option value="0">Inactive</option>
+  </select>
+
+  <button class="btn-search" (click)="search()">Search</button>
+  <button class="btn-reset" (click)="reset()">Reset</button>
+
+</div>
+
+
 <table class="table">
   <thead>
     <tr>
-      <th>ID</th>
+      <th>BID</th>
       <th style="width: 150px;">Name</th>
       <th style="width: 150px;">Area Name</th>
       <th style="width: 150px;">Region Name</th>

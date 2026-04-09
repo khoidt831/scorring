@@ -6,8 +6,8 @@ export class DistrictService {
 
     constructor(private api: BaseApiService) { }
 
-    getList() {
-        return this.api.post('api/get-all-district', {});
+    getDistrict() {
+        return this.api.get('api/get-all-district');
     }
 
 }

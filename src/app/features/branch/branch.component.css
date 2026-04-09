@@ -103,3 +103,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.search-box {
+    margin-bottom: 20px;
+}
+.btn-search { margin-left: 20px;}
+.btn-reset { margin-left: 20px;}
+.aid { margin-left: 20px;}
+.branch-name { margin-left: 20px;}
+.status { margin-left: 20px;}
+
+
+

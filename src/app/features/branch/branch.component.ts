@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BranchService } from 'src/app/core/services/branch.service';
+import { DistrictService } from 'src/app/core/services/district.service';
 
 @Component({
   selector: 'app-branch',
@@ -8,17 +9,34 @@ import { BranchService } from 'src/app/core/services/branch.service';
 })
 export class BranchComponent implements OnInit {
 
-  fullList: any[] = []; 
-  list: any[] = []; 
+  fullList: any[] = [];
+  list: any[] = [];
+
+  searchForm: any = {
+    bid: '',
+    aid: '',
+    name: '',
+    status: ''
+  };
+
+  districts: any[] = [];
+  selectedDistrict: string = '';
 
   page = 0;
   size = 10;
   total = 0;
 
-  constructor(private service: BranchService) { }
-  
+  constructor(private service: BranchService, private districtService: DistrictService) { }
+
   ngOnInit() {
     this.load();
+    this.loadDistrict();
+  }
+
+  loadDistrict() {
+    this.districtService.getDistrict().subscribe((res: any) => {
+      this.districts = res.data || [];
+    });
   }
 
   load() {
@@ -68,5 +86,29 @@ export class BranchComponent implements OnInit {
 
   get totalPages() {
     return Math.ceil(this.total / this.size);
+  }
+
+  search() {
+    const payload = {
+      ...this.searchForm,
+      page: this.page,
+      size: this.size
+    };
+
+    this.service.getList(payload).subscribe((res: any) => {
+      this.list = res.data || [];
+      this.total = res.total || 0;
+    });
+  }
+
+  reset() {
+    this.searchForm = {
+      bid: '',
+      aid: '',
+      name: '',
+      status: ''
+    };
+    this.page = 1;
+    this.search();
   }
 }

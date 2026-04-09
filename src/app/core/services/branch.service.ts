@@ -9,7 +9,7 @@ export class BranchService {
     getList() {
         return this.api.post('api/admin/search-branch', {});
     }
-
+    
     create(data: any) {
         return this.api.post('branch', data);
     }
