@@ -71,12 +71,12 @@ export class BranchComponent implements OnInit {
     this.service.getList(this.searchForm).subscribe((res: any) => {
       let data: any[] = res.data || [];
 
-      data = data.filter(item => {
+      const bid = this.searchForm.bid?.trim()?.toUpperCase();
+      const aid = this.searchForm.aid;
+      const name = this.searchForm.name?.trim()?.toUpperCase();
+      const status = this.searchForm.status;
 
-        const bid = this.searchForm.bid?.trim()?.toUpperCase();
-        const aid = this.searchForm.aid?.trim()?.toUpperCase();
-        const name = this.searchForm.name?.trim()?.toUpperCase();
-        const status = this.searchForm.status;
+      data = data.filter(item => {
 
         let ok = true;
 
@@ -85,7 +85,7 @@ export class BranchComponent implements OnInit {
         }
 
         if (aid) {
-          ok = ok && item.aid?.toUpperCase().includes(aid);
+          ok = ok && item.aid === aid;
         }
 
         if (name) {
@@ -114,7 +114,7 @@ export class BranchComponent implements OnInit {
       name: '',
       status: ''
     };
-
+    
     this.page = 0;
     this.search();
   }
