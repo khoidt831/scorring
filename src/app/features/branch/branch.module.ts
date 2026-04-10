@@ -5,10 +5,12 @@ import { BranchRoutingModule } from './branch-routing.module';
 import { BranchComponent } from './branch.component';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CreateBranchComponent } from './create-branch/create-branch.component';
 
 @NgModule({
   declarations: [
-    BranchComponent
+    BranchComponent,
+    CreateBranchComponent
   ],
   imports: [
     CommonModule,

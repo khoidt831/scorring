@@ -25,7 +25,7 @@ export class BranchComponent implements OnInit {
 
   districts: any[] = [];
   selectedDistrict: string = '';
-  
+
   page = 0;
   size = 10;
   total = 0;
@@ -33,13 +33,21 @@ export class BranchComponent implements OnInit {
   constructor(private service: BranchService, private areaService: AreaService) { }
 
   ngOnInit() {
-    this.search();
+    this.loadAll();
     this.loadAreas();
   }
 
   loadAreas() {
     this.areaService.getAll().subscribe((res: any) => {
       this.areas = res.data || res || [];
+    });
+  }
+
+  loadAll() {
+    this.service.getList({}).subscribe((res: any) => {
+      const rawData: any[] = res.data || [];
+      this.originalList = rawData;
+      this.applyFilter();
     });
   }
 
@@ -69,12 +77,7 @@ export class BranchComponent implements OnInit {
   }
 
   search() {
-    this.service.getList(this.searchForm).subscribe((res: any) => {
-
-      const rawData: any[] = res.data || [];
-      this.originalList = rawData;
-      this.applyFilter();
-    });
+    this.applyFilter();
   }
 
   applyFilter() {
@@ -100,9 +103,9 @@ export class BranchComponent implements OnInit {
         ok = ok && item.name?.toUpperCase().includes(name);
       }
 
-     if (status !== null && status !== undefined && status !== '') {
-  ok = ok && item.status == status;
-}
+      if (status !== null && status !== undefined && status !== '') {
+        ok = ok && item.status == status;
+      }
 
       return ok;
     });

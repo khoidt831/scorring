@@ -12,14 +12,15 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
+
+
 @NgModule({
   declarations: [
     AppComponent,
     LayoutComponent,
     HeaderComponent,
     SidebarComponent,
-
-
+    
   ],
   imports: [
     BrowserModule,
