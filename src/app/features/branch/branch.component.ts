@@ -12,19 +12,20 @@ export class BranchComponent implements OnInit {
 
   fullList: any[] = [];
   list: any[] = [];
-
   areas: any[] = [];
+
+  originalList: any[] = [];
 
   searchForm: any = {
     bid: '',
-    aid: '',
+    aid: null,
     name: '',
-    status: ''
+    status: null,
   };
 
   districts: any[] = [];
   selectedDistrict: string = '';
-
+  
   page = 0;
   size = 10;
   total = 0;
@@ -69,53 +70,58 @@ export class BranchComponent implements OnInit {
 
   search() {
     this.service.getList(this.searchForm).subscribe((res: any) => {
-      let data: any[] = res.data || [];
 
-      const bid = this.searchForm.bid?.trim()?.toUpperCase();
-      const aid = this.searchForm.aid;
-      const name = this.searchForm.name?.trim()?.toUpperCase();
-      const status = this.searchForm.status;
-
-      data = data.filter(item => {
-
-        let ok = true;
-
-        if (bid) {
-          ok = ok && item.bid?.toUpperCase().includes(bid);
-        }
-
-        if (aid) {
-          ok = ok && item.aid === aid;
-        }
-
-        if (name) {
-          ok = ok && item.name?.toUpperCase().includes(name);
-        }
-
-        if (status !== '' && status !== null && status !== undefined) {
-          ok = ok && item.status == status;
-        }
-
-        return ok;
-      });
-
-      this.fullList = data;
-      this.total = data.length;
-
-      this.page = 0;
-      this.paginate();
+      const rawData: any[] = res.data || [];
+      this.originalList = rawData;
+      this.applyFilter();
     });
+  }
+
+  applyFilter() {
+    let data = [...this.originalList];
+
+    const bid = this.searchForm.bid?.trim()?.toUpperCase();
+    const aid = this.searchForm.aid;
+    const name = this.searchForm.name?.trim()?.toUpperCase();
+    const status = this.searchForm.status;
+
+    data = data.filter(item => {
+      let ok = true;
+
+      if (bid) {
+        ok = ok && item.bid?.toUpperCase().includes(bid);
+      }
+
+      if (aid) {
+        ok = ok && item.aid === aid;
+      }
+
+      if (name) {
+        ok = ok && item.name?.toUpperCase().includes(name);
+      }
+
+     if (status !== null && status !== undefined && status !== '') {
+  ok = ok && item.status == status;
+}
+
+      return ok;
+    });
+
+    this.fullList = data;
+    this.total = data.length;
+
+    this.page = 0;
+    this.paginate();
   }
 
   reset() {
     this.searchForm = {
       bid: '',
-      aid: '',
+      aid: null,
       name: '',
-      status: ''
+      status: null
     };
-    
-    this.page = 0;
-    this.search();
+
+    this.applyFilter();
   }
 }

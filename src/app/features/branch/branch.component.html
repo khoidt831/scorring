@@ -6,14 +6,12 @@
 
   <input type="text" placeholder="Branch ID (BID)" [(ngModel)]="searchForm.bid" />
 
-  <!-- <input class="aid" type="text" placeholder="Area ID (aid)" [(ngModel)]="searchForm.aid" /> -->
-
   <select [(ngModel)]="searchForm.aid" class="area">
-    <option value="">-- Chọn Area --</option>
-    <option *ngFor="let item of areas" [value]="item.aid">
-      {{ item.name }}
-    </option>
-  </select>
+  <option [ngValue]="null">-- Chọn Area --</option>
+  <option *ngFor="let item of areas" [ngValue]="item.aid">
+    {{ item.name }}
+  </option>
+</select>
 
   <input class="branch-name" type="text" placeholder="Branch Name" [(ngModel)]="searchForm.name" />
 
@@ -24,10 +22,9 @@
   </select>
 
   <button class="btn-search" (click)="search()">Search</button>
-  <button class="btn-reset" (click)="reset()">Reset</button>
+ <button type="button" class="btn-reset" (click)="reset()">Reset</button>
 
 </div>
-
 
 <table class="table">
   <thead>
